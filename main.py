@@ -52,9 +52,9 @@ def compare_two_players(id1: int, id2: int):
         return {"jugador_mas_alto": j1 if j1.altura > j2.altura else j2}
     return {"error": "Uno o ambos jugadores no encontrados"}
 
-@app.get("/jugadores/equipo/{id}")
-def show_equipo(id: int):
-    j = next((j for j in jugadores if j.id == id), None)
+@app.get("/jugadores/equipo/{nombre}")
+def show_equipo(nombre: str):
+    j = next((j for j in jugadores if j.name.lower() == nombre.lower()), None)
     return {"equipo": j.equipo} if j else {"error": "Jugador no encontrado"}
 
 @app.get("/jugadores/equipo/")
