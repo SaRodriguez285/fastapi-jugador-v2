@@ -3,6 +3,7 @@ from typing import List
 from datetime import date
 from enum import Enum, auto
 from pydantic import BaseModel
+from models.data import jugadores
 
 app = FastAPI()
 
@@ -22,19 +23,15 @@ class Jugador(BaseModel):
     posicion: PosicionFutbol
     equipo: str
 
-jugadores: List[Jugador] = []
+jugadores: List[Jugador] = jugadores
 
-@app.post("/jugadores/")
-def add_jugador(jugador: Jugador):
-    jugadores.append(jugador)
-    return jugador
+@app.get("/jugadores/")
+def show_all_players():
+    return jugadores
 
 @app.get("/jugadores/{id}")
 def show_one_player(id: int):
-    for j in jugadores:
-        if j.id == id:
-            return j
-    return {"error": "Jugador no encontrado"}
+    return next((j for j in jugadores if j.id == id), {"error": "Jugador no encontrado"})
 
 @app.get("/jugadores/compare/{id1}/{id2}")
 def compare_two_players(id1: int, id2: int):
@@ -47,13 +44,7 @@ def compare_two_players(id1: int, id2: int):
 @app.get("/jugadores/equipo/{id}")
 def show_equipo(id: int):
     j = next((j for j in jugadores if j.id == id), None)
-    if j:
-        return {"equipo": j.equipo}
-    return {"error": "Jugador no encontrado"}
-
-@app.get("/jugadores/")
-def show_all_players():
-    return jugadores
+    return {"equipo": j.equipo} if j else {"error": "Jugador no encontrado"}
 
 @app.get("/jugadores/equipo/")
 def show_players_by_team(equipo: str):
