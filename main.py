@@ -3,7 +3,7 @@ from typing import List
 from datetime import date
 from enum import Enum, auto
 from pydantic import BaseModel
-from models.data import jugadores
+from models.data import jugadores_data
 
 app = FastAPI()
 
@@ -23,7 +23,18 @@ class Jugador(BaseModel):
     posicion: PosicionFutbol
     equipo: str
 
-jugadores: List[Jugador] = jugadores
+jugadores: List[Jugador] = [
+    Jugador(
+        id=j["id"],
+        name=j["name"],
+        dorsal=j["dorsal"],
+        nacimiento=j["nacimiento"],
+        altura=j["altura"],
+        posicion=PosicionFutbol[j["posicion"]],
+        equipo=j["equipo"]
+    )
+    for j in jugadores_data
+]
 
 @app.get("/jugadores/")
 def show_all_players():
