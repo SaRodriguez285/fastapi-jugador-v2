@@ -12,3 +12,12 @@ class PosicionFutbol(Enum):
     MEDIOCAMPISTA = auto()
     DELANTERO = auto()
     EXTREMO = auto()
+    
+class Jugador(BaseModel):
+    id: int
+    name: str
+    dorsal: int
+    nacimiento: date
+    altura: float
+    posicion: PosicionFutbol
+    equipo: str
